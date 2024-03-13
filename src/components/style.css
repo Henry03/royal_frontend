@@ -1,0 +1,29 @@
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: none;
+    padding-right: 1em; /* Adjust padding to leave space for custom arrow/icon */
+}
+
+/* Add a custom arrow/icon (optional) */
+select::after {
+    content: '\25BC'; /* Unicode character for a down arrow */
+    position: absolute;
+    right: 8px; /* Adjust the right position of the custom arrow */
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#vertical-sticky-table td:nth-child(1),
+#vertical-sticky-table th:nth-child(1) {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+}
+
+#vertical-sticky-table thead:nth-child(1){
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
