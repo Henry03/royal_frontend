@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast'
 
-const AddUser = ({id, fetchDataParent}) => {
+const AddUser = ({fetchDataParent}) => {
     const [dataUnit, setDataUnit] = useState([{}])
     const [dataStaff, setDataStaff] = useState([{}])
     const [staffs, setStaffs] = useState([{}])
@@ -13,6 +13,7 @@ const AddUser = ({id, fetchDataParent}) => {
     const [unit, setUnit] = useState('')
     const [role, setRole] = useState('')
     const [position, setPosition] = useState('')
+    const [department, setDepartment] = useState('')
     const [error, setError] = useState({})
 
     const fetchData = (e) => {
@@ -47,7 +48,8 @@ const AddUser = ({id, fetchDataParent}) => {
             id_staff: staff,
             username: username,
             password: password,
-            role: role
+            role: role,
+            id_unit: department
         }   
 
         toast.promise
@@ -217,6 +219,25 @@ const AddUser = ({id, fetchDataParent}) => {
                         {
                             error.role &&
                             <label className="label-text-alt mt-1 text-red-500">{error.role}</label>
+                        }
+                    </label>
+                    <label className="form-control w-full">
+                        <div className="label">
+                            <span className="label-text">Department</span>
+                        </div>
+                        <select className="select select-bordered" value={department} onChange={(e)=>setDepartment(e.target.value)}>
+                            <option disabled value={""}>Select Department</option>
+                            {
+                                units.map((item, index) => {
+                                    return(
+                                        <option key={index} value={item.idUnit}>{item.unit}</option>
+                                    )
+                                })
+                            }
+                        </select>   
+                        {
+                            error.department &&
+                            <label className="label-text-alt mt-1 text-red-500">{error.department}</label>
                         }
                     </label>
                     

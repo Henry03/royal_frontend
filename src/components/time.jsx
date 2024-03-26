@@ -40,19 +40,19 @@ const Time = () => {
                         <span className="countdown font-mono text-3xl">
                         <span style={{"--value":currentTime.getHours()}}></span>
                         </span>
-                        days
+                        hour
                     </div> 
                     <div className="flex flex-col">
                         <span className="countdown font-mono text-3xl">
                         <span style={{"--value":currentTime.getMinutes()}}></span>
                         </span>
-                        hours
+                        min
                     </div> 
                     <div className="flex flex-col">
                         <span className="countdown font-mono text-3xl">
                         <span style={{"--value":currentTime.getSeconds()}}></span>
                         </span>
-                        min
+                        sec
                     </div> 
                     <div className="flex flex-col">
                         <span className="countdown font-mono text-3xl">

@@ -3,6 +3,7 @@ import Navbar from '../../components/navbar';
 import Sidebar from '../../components/sidebar'; 
 import AuthCheckAdmin from '../../components/auth/AuthCheckAdmin';
 import DashboardHOD from '../../components/departementHead/dashboard/dashboardHOD';
+import Dashboard from '../../components/hrd/dashboard/dashboard';
 
 
 const DashboardPage = () => {
@@ -13,7 +14,7 @@ const DashboardPage = () => {
             <Navbar/>
             <Sidebar children={
                 role == 6 ?
-                "test"
+                <Dashboard/> 
                 :<DashboardHOD/>
             }/>
         </div>

@@ -113,7 +113,7 @@ const OutOfDuty = () => {
                                     return (
                                         <tr key={index}>
                                             <th>{new Date(permit.created_at).toLocaleString('en-SG', formattedDate)}</th>
-                                            <td>{permit.Nama}</td>
+                                            <td>{permit.name}</td>
                                             <td>{permit.destination}</td>
                                             {/* <td>{new Date(permit.start_date).toLocaleString('en-US', formattedTime)}</td>
                                             <td>{new Date(permit.end_date).toLocaleString('en-US', formattedTime)}</td> */}

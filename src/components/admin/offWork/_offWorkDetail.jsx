@@ -3,7 +3,7 @@ import axios from 'axios';
 import ConfirmModal from '../../confirmModal';
 import toast, { Toaster } from 'react-hot-toast'
 import { formatDate, set } from 'date-fns';
-import { formattedDate } from '../../utils';
+import { formattedDate, formattedMonthYear } from '../../utils';
 import Pagination from '../../pagination';
 
 const OffWorkDetail = ({id, name}) => {
@@ -165,8 +165,10 @@ const OffWorkDetail = ({id, name}) => {
                                                             </td>
                                                                 <td>
                                                                 {
-                                                                    item.replace_date ?
+                                                                    item.replace_date && item.approval == '2' ?
                                                                         <div className='badge badge-success'>Replaced</div>
+                                                                    : item.replace_date && item.approval == '1' ?
+                                                                    <div className='badge badge-warning'>Pending</div>
                                                                     :
                                                                     item.expire != null && new Date(item.expire) < new Date() ?
                                                                     <div className='badge badge-error'>
@@ -224,7 +226,7 @@ const OffWorkDetail = ({id, name}) => {
                                                             <th>{number}</th>
                                                             {
                                                                 item.date ?
-                                                                    <td>{new Date(item.date).toLocaleDateString('en-GB', formattedDate)}</td>
+                                                                    <td>{new Date(item.date).toLocaleDateString('en-GB', formattedMonthYear)}</td>
                                                                 : <td> - </td>
                                                             }
                                                             {

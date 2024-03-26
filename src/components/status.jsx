@@ -27,6 +27,12 @@ const Status = ({track, status}) => {
                     <FaRegClock/>Pending HR Acknowledged
                 </div>
             </td>
+            : track == 5 && status == 1 ?
+            <td>
+                <div className="badge badge-warning gap-3 p-3">
+                    <FaRegClock/>Pending GM Approval
+                </div>
+            </td>
             : track == 6 && status == 1 ?
             <td>
                 <div className="badge badge-success gap-3 p-3">
@@ -69,7 +75,9 @@ const Status = ({track, status}) => {
                     <FaRegCircleXmark/>Rejected by HRD
                     </div>
             </td>
-            : <td></td>
+            : <td>{
+                console.log(track, status)
+            }</td>
     )
 }
 

@@ -6,6 +6,8 @@ import {AiOutlineSortAscending, AiOutlineSortDescending} from 'react-icons/ai'
 import StaffDetail from './staffDetail'
 import AddStaff from './addStaff'
 import { Toaster } from 'react-hot-toast'
+import ImportStaff from './_importStaff'
+import ShowImportStaff from './_showImportStaff'
 
 const Staff = () => {
     const [firstPage, setFirstPage] = useState('1')
@@ -18,13 +20,17 @@ const Staff = () => {
     const [search, setSearch] = useState('')
     const [data, setData] = useState([])
     const [id, setId] = useState('')
+    const [idUnit, setIdUnit] = useState('')
+    const [unit, setUnit] = useState([])
+    const [importData, setImportData] = useState([])
 
     const fetchData = (e) => {
         e?.preventDefault()
         const input = {
             search: search,
             filter: filter,
-            sort: sort
+            sort: sort,
+            unit: idUnit
         } 
 
         axios.post('/staff?page='+currentPage, input, 
@@ -39,6 +45,16 @@ const Staff = () => {
             setNextPage(res.data.data.current_page + 1)
             setLastPage(res.data.data.last_page)
             setPrevPage(res.data.data.current_page - 1)
+        })
+
+        axios.get('/unit/index',
+        {
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem('admin-token')
+            }
+        })
+        .then(res => {
+            setUnit(res.data.data)
         })
     }
 
@@ -56,30 +72,47 @@ const Staff = () => {
     
     useEffect(() => {
         fetchData()
-    }, [currentPage, filter, sort])
+    }, [currentPage, filter, sort, idUnit])
 
     return (
         <>
             <div className="m-5 p-5 md:px-10 bg-base-100 rounded-xl">
                 <div className='grid grid-flow-col items-center justify-between'>
                     <h1 className="text-2xl font-semibold">Staff Data</h1>
-                    <button className="btn btn-primary w-40" onClick={()=>document.getElementById('addStaff').showModal()}>Add Staff</button>
+                    <div className='grid grid-flow-row sm:grid-flow-col gap-2'>
+                        <button className="btn btn-primary btn-sm sm:btn-md w-40" onClick={()=>document.getElementById('importStaff').showModal()}>Import Staff</button>
+                        <button className="btn btn-primary btn-sm sm:btn-md w-40" onClick={()=>document.getElementById('addStaff').showModal()}>Add Staff</button>
+                    </div>
                 </div>
             </div>
             <div className="m-5 p-3 md:p-10 bg-base-100 rounded-xl">
-                <div className='grid grid-flow-col justify-between mb-3'>
-                    <div className='grid grid-flow-col'>
-                        <select className="select select-bordered w-full max-w-xs" value={filter} onChange={(e)=>setFilter(e.target.value)}>
-                            <option value="FID">ID</option>
-                            <option value="Nama">Name</option>
-                            <option value="Namaunit">Unit</option>
-                            <option value="JABATAN">Position</option>
+                <div className='grid grid-flow-col justify-between mb-3 gap-2'>
+                    <div className='grid grid-flow-row sm:grid-flow-col gap-2'>
+                        <select className="select select-bordered w-full max-w-xs" value={idUnit} onChange={(e)=>setIdUnit(e.target.value)}>
+                            <option value="%%">All Unit</option>
+                            {
+                                unit.map((unit, index) => {
+                                    return (
+                                        <option key={index} value={unit.id}>{unit.name}</option>
+                                    )
+                                })
+                            }
                         </select>
-                        <label className="swap swap-rotate ms-2">
-                            <input type="checkbox" />
-                            <AiOutlineSortDescending className="swap-on" size='25' onClick={()=>setSort('desc')}/>
-                            <AiOutlineSortAscending className="swap-off" size='25' onClick={()=>setSort('asc')}/>
-                        </label>
+                        <div className='grid grid-flow-col gap-2'>
+                            <select className="select select-bordered w-full max-w-xs" value={filter} onChange={(e)=>setFilter(e.target.value)}>
+                                <option value="FID">ID</option>
+                                <option value="Nama">Name</option>
+                                <option value="Namaunit">Unit</option>
+                                <option value="JABATAN">Position</option>
+                            </select>
+                            <label className="swap swap-rotate">
+                                <input type="checkbox" />
+                                <AiOutlineSortDescending className="swap-on" size='25' onClick={()=>setSort('desc')}/>
+                                <AiOutlineSortAscending className="swap-off" size='25' onClick={()=>setSort('asc')}/>
+                            </label>
+
+                        </div>
+                        
                         
                     </div>
                     
@@ -133,12 +166,11 @@ const Staff = () => {
             </div>
             <StaffDetail id={id} fetchDataParent={fetchData}/>
             <AddStaff fetchDataParent={fetchData}/>
+            <ImportStaff setData={setImportData}/>
+            <ShowImportStaff data={importData} fetchDataParent={fetchData}/>
             
             <Toaster 
                 position="top-right"
-                toastOptions={{
-                    duration:2000
-                }}
             />
         </>
     )

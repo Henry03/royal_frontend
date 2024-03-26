@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast'
 import ConfirmModal from '../../confirmModal'
+import { set } from 'date-fns';
 
 const UserDetail = ({id, fetchDataParent}) => {
     const [data, setData] = useState([{}])
@@ -14,6 +15,8 @@ const UserDetail = ({id, fetchDataParent}) => {
     const [password, setPassword] = useState('')
     const [role, setRole] = useState('')
     const [position, setPosition] = useState('')
+    const [unit, setUnit] = useState('')
+    const [idUnit, setIdUnit] = useState('')
     const [isEdit, setIsEdit] = useState(false)
     const [error, setError] = useState({})
 
@@ -51,7 +54,9 @@ const UserDetail = ({id, fetchDataParent}) => {
             setData(res.data.data)
             setStaff(res.data.data.FID)
             setUsername(res.data.data.username)
-            setRole(res.data.data.NamaUnit)
+            setUnit(res.data.data.NamaUnit)
+            setIdUnit(res.data.data.id_unit)
+            setRole(res.data.data.role)
         })
 
     }
@@ -62,7 +67,8 @@ const UserDetail = ({id, fetchDataParent}) => {
             id_staff: staff,
             username: username,
             password: password,
-            role: role
+            role: role,
+            id_unit: idUnit
         }   
 
         toast.promise
@@ -153,16 +159,15 @@ const UserDetail = ({id, fetchDataParent}) => {
         setStaff(data.FID)
         setUsername(data.username)
         setRole(data.role)
+        setUnit(data.NamaUnit)
         setIsEdit(!isEdit)
+        setIdUnit(data.id_unit)
     }
 
     useEffect(() => {
-        console.log(dataStaff)
-        console.log(staff)
         if(dataStaff){
             const selectedValue = staff;
             const selectedItem = dataStaff.find(item => item.FID == selectedValue);
-            console.log(selectedItem)
           
             if (selectedItem) { 
               setPosition(selectedItem.JABATAN);
@@ -183,9 +188,9 @@ const UserDetail = ({id, fetchDataParent}) => {
     },[dataUnit])
 
     useEffect(() => {
-        const staffTemp = dataStaff.filter(item => item.Namaunit == role);
+        const staffTemp = dataStaff.filter(item => item.Namaunit == unit);
         setStaffs(staffTemp);
-    },[role])
+    },[unit])
 
     return (
         <>  
@@ -197,10 +202,10 @@ const UserDetail = ({id, fetchDataParent}) => {
                     <h3 className="font-bold text-lg">User Detail </h3>
                     <label className="form-control w-full">
                         <div className="label">
-                            <span className="label-text">Role</span>
+                            <span className="label-text">Unit</span>
                         </div>
-                        <select className="select select-bordered" value={role} onChange={(e)=>setRole(e.target.value)} onMouseDown={(e)=>handleMouseDown(e)} onKeyDown={(e)=>handleKeyDown(e)}>
-                            <option disabled value={""}>Select Role</option>
+                        <select className="select select-bordered" value={unit} onChange={(e)=>setUnit(e.target.value)} onMouseDown={(e)=>handleMouseDown(e)} onKeyDown={(e)=>handleKeyDown(e)}>
+                            <option disabled value={""}>Select Unit</option>
                             {
                                 units.map((item, index) => {
                                     return(
@@ -210,7 +215,7 @@ const UserDetail = ({id, fetchDataParent}) => {
                             }
                         </select>   
                         {
-                            error.role &&
+                            error && error.role &&
                             <label className="label-text-alt mt-1 text-red-500">{error.role}</label>
                         }
                     </label>
@@ -232,7 +237,7 @@ const UserDetail = ({id, fetchDataParent}) => {
                                     }
                                 </select>  
                                 {
-                                    error.id_staff &&
+                                    error && error.id_staff &&
                                     <label className="label-text-alt mt-1 tran text-red-500">{error.id_staff}</label>
                                 }
                             </label>
@@ -255,7 +260,7 @@ const UserDetail = ({id, fetchDataParent}) => {
                         </div>
                         <input readOnly={!isEdit} type="text" placeholder="User Username" className="input input-bordered w-full" value={username} onChange={(e)=>setUsername(e.target.value)}/>
                         {
-                            error.username &&
+                            error && error.username &&
                             <label className="label-text-alt mt-1 text-red-500">{error.username}</label>
                         }
                     </label>
@@ -265,10 +270,49 @@ const UserDetail = ({id, fetchDataParent}) => {
                         </div>
                         <input readOnly={!isEdit} type="password" placeholder="User Password" className="input input-bordered w-full" value={password} onChange={(e)=>setPassword(e.target.value)}/>
                         {
-                            error.password &&
+                            error && error.password &&
                             <label className="label-text-alt mt-1 text-red-500">{error.password}</label>
                         }
                     </label>
+                    <label className="form-control w-full">
+                        <div className="label">
+                            <span className="label-text">Role</span>
+                        </div>
+                        <select className="select select-bordered" value={role} onChange={(e)=>setRole(e.target.value)} onMouseDown={(e)=>handleMouseDown(e)} onKeyDown={(e)=>handleKeyDown(e)}>
+                            <option disabled value={""}>Select Role</option>
+                            <option value={"1"}>Admin</option>
+                            <option value={"2"}>Chief</option>
+                            <option value={"3"}>Department Head Assistant</option>
+                            <option value={"4"}>Department Head</option>
+                            <option value={"5"}>General Manager</option>
+                            <option value={"6"}>HRD</option>
+                            
+                        </select>   
+                        {
+                            error && error.role &&
+                            <label className="label-text-alt mt-1 text-red-500">{error.role}</label>
+                        }
+                    </label>
+                    <label className="form-control w-full">
+                        <div className="label">
+                            <span className="label-text">Department</span>
+                        </div>
+                        <select className="select select-bordered" value={idUnit} onChange={(e)=>setIdUnit(e.target.value)} onMouseDown={(e)=>handleMouseDown(e)} onKeyDown={(e)=>handleKeyDown(e)}>
+                            <option disabled value={""}>Select Department</option>
+                            {
+                                units.map((item, index) => {
+                                    return(
+                                        <option key={index} value={item.idUnit}>{item.unit}</option>
+                                    )
+                                })
+                            }
+                        </select>   
+                        {
+                            error && error.department &&
+                            <label className="label-text-alt mt-1 text-red-500">{error.department}</label>
+                        }
+                    </label>
+
                     
                     {
                         !isEdit &&

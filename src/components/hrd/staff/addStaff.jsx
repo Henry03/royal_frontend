@@ -3,12 +3,11 @@ import axios from 'axios';
 import ConfirmModal from '../../confirmModal';
 import toast, { Toaster } from 'react-hot-toast'
 
-const AddStaff = ({id, fetchDataParent}) => {
+const AddStaff = ({fetchDataParent}) => {
     const [data, setData] = useState({})
     const [dataUnit, setDataUnit] = useState([{}])
     const [units, setUnits] = useState([])
     const [positions, setPositions] = useState([])
-    const [idStaff, setIdStaff] = useState('')
     const [name, setName] = useState('')
     const [nik, setNik] = useState('')
     const [unit, setUnit] = useState('')
@@ -20,9 +19,6 @@ const AddStaff = ({id, fetchDataParent}) => {
 
     const fetchData = (e) => {
         e?.preventDefault()
-        const input = {
-            id: id
-        }
 
         axios.get('/unit',
         {
@@ -39,7 +35,6 @@ const AddStaff = ({id, fetchDataParent}) => {
     const storeData = (e) => {
         e?.preventDefault()
         const input = {
-            FID: id,
             Nama: name,
             NIK: nik,
             DEPT_NAME: unit,
@@ -62,6 +57,8 @@ const AddStaff = ({id, fetchDataParent}) => {
                     console.log(res)
                     setIsEdit(!isEdit)
                     fetchDataParent()
+                    defaultValue()
+                    document.getElementById('addStaff').close()
                     return res.data.message
                 },
                 error: (err) => {
@@ -87,6 +84,16 @@ const AddStaff = ({id, fetchDataParent}) => {
         return { unit, idUnit: item.idUnit };
     });
 
+    const defaultValue = () => {
+        setName('')
+        setNik('')
+        setUnit('')
+        setPosition('')
+        setStartDate('')
+        setPhoneNumber('')
+        setError({})
+    }
+
     useEffect(() => {
         fetchData()
     },[])
@@ -107,26 +114,16 @@ const AddStaff = ({id, fetchDataParent}) => {
             <dialog id="addStaff" className="modal">
                 <div className="modal-box">
                     <form method="dialog">
-                    <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                    <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" onClick={defaultValue}>✕</button>
                     </form>
                     <h3 className="font-bold text-lg">Staff Detail </h3>
-                    <label className="form-control w-full">
-                        <div className="label">
-                            <span className="label-text">ID</span>
-                        </div>
-                        <input type="text" placeholder="Staff ID" className="input input-bordered w-full" value={idStaff} onChange={(e)=>setIdStaff(e.target.value)}/>
-                        {
-                            error.FID &&
-                            <label className="label-text-alt mt-1 text-red-500">{error.FID}</label>
-                        }
-                    </label>
                     <label className="form-control w-full">
                         <div className="label">
                             <span className="label-text">Name</span>
                         </div>
                         <input type="text" placeholder="Staff Name" className="input input-bordered w-full" value={name} onChange={(e)=>setName(e.target.value)}/>
                         {
-                            error.Nama &&
+                            error && error.Nama &&
                             <label className="label-text-alt mt-1 text-red-500">{error.Nama}</label>
                         }
                     </label>
@@ -136,7 +133,7 @@ const AddStaff = ({id, fetchDataParent}) => {
                         </div>
                         <input type="text" placeholder="Staff NIK" className="input input-bordered w-full" value={nik} onChange={(e)=>setNik(e.target.value)}/>
                         {
-                            error.NIK &&
+                            error && error.NIK &&
                             <label className="label-text-alt mt-1 text-red-500">{error.NIK}</label>
                         }
                     </label>
@@ -145,6 +142,7 @@ const AddStaff = ({id, fetchDataParent}) => {
                             <span className="label-text">Unit</span>
                         </div>
                         <select className="select select-bordered" value={unit} onChange={(e)=>setUnit(e.target.value)}>
+                            <option value={""} disabled>Select Unit</option>
                             {
                                 units.map((item, index) => {
                                     return(
@@ -154,7 +152,7 @@ const AddStaff = ({id, fetchDataParent}) => {
                             }
                         </select>   
                         {
-                            error.DEPT_NAME &&
+                            error && error.DEPT_NAME &&
                             <label className="label-text-alt mt-1 text-red-500">{error.DEPT_NAME}</label>
                         }
                     </label>
@@ -165,6 +163,7 @@ const AddStaff = ({id, fetchDataParent}) => {
                                 <span className="label-text">Position</span>
                             </div>
                             <select className="select select-bordered" value={position} onChange={(e)=>setPosition(e.target.value)}>
+                                <option value="" disabled>Select Position</option>
                                 {
                                     positions.map((item, index) => {
                                         return(
@@ -174,7 +173,7 @@ const AddStaff = ({id, fetchDataParent}) => {
                                 }
                             </select>   
                             {
-                                error.JABATAN &&
+                                error && error.JABATAN &&
                                 <label className="label-text-alt mt-1 text-red-500">{error.JABATAN}</label>
                             }
                         </label>
@@ -185,7 +184,7 @@ const AddStaff = ({id, fetchDataParent}) => {
                         </div>
                         <input type="date" placeholder="Start Date" className="input input-bordered w-full" value={formatDate(startDate)} onChange={(e)=>setStartDate(e.target.value)}/>
                         {
-                            error.TGL_MASUK &&
+                            error && error.TGL_MASUK &&
                             <label className="label-text-alt mt-1 text-red-500">{error.TGL_MASUK}</label>
                         }
                     </label>
@@ -195,20 +194,16 @@ const AddStaff = ({id, fetchDataParent}) => {
                         </div>
                         <input type="text" placeholder="Phone Number Not Available" className="input input-bordered w-full" value={phoneNumber} onChange={(e)=>setPhoneNumber(e.target.value)}/>
                         {
-                            error.Notelp &&
+                            error && error.Notelp &&
                             <label className="label-text-alt mt-1 text-red-500">{error.Notelp}</label>
                         }
                     </label>
                     <div className='grid grid-flow-col gap-5 mt-5'>
-                        <button className='btn w-full' onClick={(e)=>cancel(e)}>Cancel</button>
                         <button className='btn btn-success w-full' onClick={(e)=>storeData(e)}>Save</button>
                     </div>
                 </div>
                 <Toaster 
                 position="top-right"
-                toastOptions={{
-                    duration:2000
-                }}
             />
             </dialog>
         </>

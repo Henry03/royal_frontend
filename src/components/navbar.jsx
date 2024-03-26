@@ -2,6 +2,8 @@ import SwitchMode from "./switchMode";
 import Logo from '../assets/logo.png';
 import { FiMenu } from 'react-icons/fi';
 import axios from "axios";
+import Profile from "./profile";
+import { useState } from "react";
 
 const logout = () => {
     if(localStorage.getItem('token') != null) {
@@ -34,6 +36,8 @@ const logout = () => {
 }
 
 const Navbar = () => {
+    const [initial, setInitial] = useState('')
+    const [color, setColor] = useState('')
     return (
         <>
         <div className="navbar bg-base-100">
@@ -44,16 +48,15 @@ const Navbar = () => {
             <div className="flex-none">
                 <SwitchMode/>
                 <div className="dropdown dropdown-end">
-                    <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
-                        <div className="w-10 rounded-full">
-                        <img alt="Tailwind CSS Navbar component" src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+                    <div tabIndex={0} role="button" className="btn btn-ghost btn-circle ">
+                        <div className="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden rounded-full mx-auto" style={{ backgroundColor: color }}>
+                            <span className="font-medium text-gray-300 dark:text-gray-100">{ initial}</span>
                         </div>
                     </div>
                     <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
                         <li>
-                        <a className="justify-between">
+                        <a className="justify-between" onClick={()=>document.getElementById('profile').showModal()}>
                             Profile
-                            <span className="badge">New</span>
                         </a>
                         </li>
                         <li><a>Settings</a></li>
@@ -62,7 +65,7 @@ const Navbar = () => {
                 </div>
             </div>
         </div>
-        
+        <Profile setInitial={setInitial} setColor={setColor}/>
         </>
     );
 }

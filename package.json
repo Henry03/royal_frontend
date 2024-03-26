@@ -2,7 +2,7 @@
   "name": "royal_ambarrukmo",
   "homepage": "https://ray.nevovis.com",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.2.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -12,6 +12,8 @@
     "host": "vite --host"
   },
   "dependencies": {
+    "@nivo/calendar": "^0.85.1",
+    "@nivo/pie": "^0.85.1",
     "@preline/pin-input": "^2.0.2",
     "@schedule-x/calendar": "^1.17.0",
     "@schedule-x/event-modal": "^1.17.0",
@@ -20,6 +22,7 @@
     "antd": "^5.14.0",
     "axios": "^1.6.7",
     "date-fns": "^3.3.1",
+    "echarts": "^5.5.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.1",

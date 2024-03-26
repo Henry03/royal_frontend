@@ -1,6 +1,8 @@
 import Logo from '../assets/logo.png';
 import { MdPeopleAlt, MdSpaceDashboard, MdChecklist, MdCalendarMonth, MdForkRight, MdOutlineWork, MdWorkOff } from 'react-icons/md'
 import { FaBusinessTime, FaUserGear } from 'react-icons/fa6'
+import { TbApi } from "react-icons/tb";
+import { FaCoffee } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 
 const Sidebar = ({children}) => {
@@ -14,7 +16,7 @@ const Sidebar = ({children}) => {
         <>
             <div className="drawer lg:drawer-open bg-base-200 min-h-max">
                 <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-                <div className="drawer-content min-h-full">
+                <div className="drawer-content h-[calc(100vh-4rem)] overflow-scroll ">
                     { children }
                 </div> 
                 <div className="drawer-side lg:h-auto " style={{zIndex: '2'}}>
@@ -36,25 +38,64 @@ const Sidebar = ({children}) => {
                                             <MdForkRight size={20}/>Request for Leave
                                         </summary>
                                         <ul className="p-2 bg-base-100 rounded-t-none">
+                                            <li><Link to="/admin/staff/permit/outofduty">Out Of Duty</Link></li>
+                                            <li><Link to="/admin/staff/permit/leave">Leave Permit</Link></li>
+                                        </ul>
+                                    </details>
+                                </li>
+                                <li><Link to="/admin/api/telegram"><TbApi size="20"/>API</Link></li>
+                            </>
+                            : role == '1' ?
+                            <>
+                                <li><Link to="/admin"><MdSpaceDashboard size="20"/>Dashboard</Link></li>
+                                <li><Link to="/admin/mod"><MdOutlineWork size="20"/>Shift</Link></li>
+                                <li><Link to="/admin/leavebalance"><MdWorkOff size="20"/>Leave Balance</Link></li>
+                                <li><Link to="/admin/extraoff"><FaCoffee size="20"/>Extra Off</Link></li>
+                                <li>
+                                    <details>
+                                        <summary>
+                                            <MdForkRight size={20}/>My Request
+                                        </summary>
+                                        <ul className="p-2 bg-base-100 rounded-t-none">
                                             <li><Link to="/admin/permit/outofduty">Out Of Duty</Link></li>
                                             <li><Link to="/admin/permit/leave">Leave Permit</Link></li>
                                         </ul>
                                     </details>
                                 </li>
                             </>
-                            : role == '1' ?
-                            <>
-                                <li><Link to="/admin"><MdSpaceDashboard size="20"/>Dashboard</Link></li>
-                                <li><Link to="/admin/mod"><MdOutlineWork size="20"/>Shift</Link></li>
-                                <li><Link to="/admin/offwork"><MdWorkOff size="20"/>Off Work</Link></li>
-                            </>
-                            :
+                            : role == '5' ?
                             <>
                                 <li><Link to="/admin"><MdSpaceDashboard size="20"/>Dashboard</Link></li>
                                 <li>
                                     <details>
                                         <summary>
                                             <MdForkRight size={20}/>Request for Leave
+                                        </summary>
+                                        <ul className="p-2 bg-base-100 rounded-t-none">
+                                            <li><Link to="/admin/staff/permit/outofduty">Out Of Duty</Link></li>
+                                            <li><Link to="/admin/staff/permit/leave">Leave Permit</Link></li>
+                                        </ul>
+                                    </details>
+                                </li>
+                            </> 
+                            :
+                            <>
+                                <li><Link to="/admin"><MdSpaceDashboard size="20"/>Dashboard</Link></li>
+                                <li>
+                                    <details>
+                                        <summary>
+                                            <MdForkRight size={20}/>Staff Request
+                                        </summary>
+                                        <ul className="p-2 bg-base-100 rounded-t-none">
+                                            <li><Link to="/admin/staff/permit/outofduty">Out Of Duty</Link></li>
+                                            <li><Link to="/admin/staff/permit/leave">Leave Permit</Link></li>
+                                        </ul>
+                                    </details>
+                                </li>
+                                <li>
+                                    <details>
+                                        <summary>
+                                            <MdForkRight size={20}/>My Request
                                         </summary>
                                         <ul className="p-2 bg-base-100 rounded-t-none">
                                             <li><Link to="/admin/permit/outofduty">Out Of Duty</Link></li>

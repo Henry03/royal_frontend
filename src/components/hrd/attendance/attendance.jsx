@@ -5,7 +5,7 @@ import Pagination from '../../pagination'
 import {AiOutlineSortAscending, AiOutlineSortDescending} from 'react-icons/ai'
 import {MdDateRange} from 'react-icons/md'
 import toast, { Toaster } from 'react-hot-toast'
-import { formattedDate, formattedTime } from '../../utils'
+import { calculateTimeDifference, formattedDate, formattedTime } from '../../utils'
 // import AddLeave from './addLeave'
 // import LeaveDetail from './leaveDetail'
 // import Status from '../../../status'
@@ -150,14 +150,13 @@ const AttendanceHRD = () => {
                     <table className="table">
                         <thead>
                             <tr>
+                                <th>Date</th>
                                 <th>Name</th>
                                 <th>Department</th>
-                                <th>Date</th>
                                 <th>Shift Time</th>
                                 <th>Time In</th>
                                 <th>Time Out</th>
                                 <th>Work Time</th>
-                                <th></th>
                             </tr>
                         </thead>
                         <tbody> 
@@ -171,46 +170,41 @@ const AttendanceHRD = () => {
                                 data.map((attendance, index) => {
                                     return (
                                         <tr key={index}>
-                                            <th>{new Date(attendance.Tanggal).toLocaleString('en-SG', formattedDate)}</th>
-                                            <td>{attendance.Shift.Nama}</td>
-                                            <td>{attendance.Shift.NamaUnit}</td>
-                                            <td>{attendance.Shift.Jam_masuk + ' - ' + attendance.Shift.Jam_keluar}</td>
+                                            <th>{new Date(attendance.date).toLocaleString('en-SG', formattedDate)}</th>
+                                            <td>{attendance.name}</td>
+                                            <td>{attendance.unit}</td>
+                                            <td>{attendance.time_in + ' - ' + attendance.time_out}</td>
                                             {
-                                                attendance.time_in != null ?
+                                                attendance.staff_time_in != null ?
                                                 <th>
                                                     {
-                                                        console.log(attendance)
-                                                    }
-                                                    {
-                                                        new Date(attendance.Tanggal + ' ' + attendance.Shift.Jam_masuk) >= new Date(attendance.time_in.DateTime) ?
-                                                            <div className="tooltip tooltip-success text-green-600" data-tip={Math.abs(attendance.time_in.EarlyIn) + " Minutes Early"}>
-                                                                {new Date(attendance.time_in.DateTime).toLocaleTimeString('en-SG', formattedTime)}
-                                                            </div>
+                                                        new Date(attendance.date + " " + attendance.time_in + ":00") >= new Date(attendance.staff_time_in) ?
+                                                            <div className="tooltip tooltip-success text-green-600" data-tip={calculateTimeDifference(attendance.date + " " + attendance.time_in + ":00", attendance.staff_time_in) + " Minutes Early"}>
+                                                                {new Date(attendance.staff_time_in).toLocaleTimeString('en-SG', formattedTime)}
+                                                            </div>  
                                                         :
-                                                            <div className="tooltip tooltip-error text-red-500" data-tip={attendance.time_in.EarlyIn + " Minutes Late"}>
-                                                                {new Date(attendance.time_in.DateTime).toLocaleTimeString('en-SG', formattedTime)}
+                                                            <div className="tooltip tooltip-error text-red-500" data-tip={calculateTimeDifference(attendance.date + " " + attendance.time_in + ":00", attendance.staff_time_in) + " Minutes Late"}>
+                                                                {new Date(attendance.staff_time_in).toLocaleTimeString('en-SG', formattedTime)}
                                                             </div>
                                                     }
                                                 </th>
                                                 : <td>No Record</td>
                                             }
                                             {
-                                                attendance.time_out != null ?
+                                                attendance.staff_time_out != null ?
                                                 <th>
                                                     {
-                                                        new Date(attendance.Tanggal + ' ' + attendance.Shift.Jam_keluar) <= new Date(attendance.time_out.DateTime) ?
-                                                            <div className="tooltip tooltip-success text-green-600" data-tip={Math.abs(attendance.time_out.EarlyOut) + " Minutes Early"}>
-                                                                {new Date(attendance.time_out.DateTime).toLocaleTimeString('en-SG', formattedTime)}
-                                                            </div>
-        
-                                                        
+                                                        new Date(attendance.date + " " + attendance.time_out + ":00") <= new Date(attendance.staff_time_out) ?
+                                                            <div className="tooltip tooltip-success text-green-600" data-tip={calculateTimeDifference(attendance.date + " " + attendance.time_out + ":00", attendance.staff_time_out) + " Minutes Late"}>
+                                                                {new Date(attendance.staff_time_out).toLocaleTimeString('en-SG', formattedTime)}
+                                                            </div>  
                                                         :
-                                                            <div className="tooltip tooltip-error text-red-500" data-tip={attendance.time_out.EarlyOut + " Minutes Late"}>
-                                                                {new Date(attendance.time_out.DateTime).toLocaleTimeString('en-SG', formattedTime)}
+                                                            <div className="tooltip tooltip-error text-red-500" data-tip={calculateTimeDifference(attendance.date + " " + attendance.time_out + ":00", attendance.staff_time_out) + " Minutes Early"}>
+                                                                {new Date(attendance.staff_time_out).toLocaleTimeString('en-SG', formattedTime)}
                                                             </div>
                                                     }
                                                 </th>
-                                                : <td>Not Yet</td>
+                                                : <td>No Record</td>
                                             }
                                             {
                                                 attendance.working_time == null ?
@@ -222,7 +216,6 @@ const AttendanceHRD = () => {
                                                     {attendance.working_time}
                                                 </td>
                                             }
-                                            <td className='btn btn-ghost' onClick={()=>{document.getElementById('leaveDetail').showModal();setId(permit.id)}}><SlOptions/></td>
                                         </tr>
                                     )
                                 })

@@ -1,3 +1,23 @@
+export const baseURLRoyal = 'http://192.168.77.209/royal_backend/public/api';
+export const baseURLHome = 'http://192.168.8.120/royal_backend/public/api';
+export const baseURL = baseURLRoyal;
+
+export const calculateTimeDifference = (timeIn, staffTimeIn) => {
+
+  // Convert strings to Date objects
+  const attendanceDateObj = new Date(timeIn);
+  const staffTimeInObj = new Date(staffTimeIn);
+  console.log(attendanceDateObj, staffTimeInObj, staffTimeIn)
+
+  // Calculate the difference in milliseconds
+  const diffMillis = Math.abs(attendanceDateObj - staffTimeInObj);
+
+  // Convert milliseconds to minutes
+  const diffMinutes = Math.ceil(diffMillis / (1000 * 60));
+
+  return diffMinutes;
+}
+
 export const convertDateFormat = (dateString) => {
     if (dateString.includes('/')) {
       const [day, month, year] = dateString.split('/');
@@ -22,6 +42,10 @@ export const getCurrentMonthYear = () => {
   const formattedDate = `${year}-${month}`;
 
   return formattedDate;
+};
+
+export const formattedWeekDayOnly = {
+  weekday: 'short'
 };
 
 export const formattedDayOnly = {
@@ -74,3 +98,24 @@ export const buttons = {
   middle: 1,
   right: 2,
 };
+
+export const getInitials = (name) => {
+  const words = name.split(' ');
+  const initials = words.map(word => word.charAt(0));
+  return initials.join('').toUpperCase();
+}
+
+export const initialsToRGB = (initials) => {
+  const charCodes = initials.split('').map(char => char.charCodeAt(0));
+  const sum = charCodes.reduce((acc, curr) => acc + curr, 0);
+  let r = Math.abs(Math.sin(sum) * 255);
+  let g = Math.abs(Math.cos(sum) * 255);
+  let b = Math.abs(Math.tan(sum) * 255);
+
+  const darknessFactor = 0.5; // Adjust this value as needed
+  r *= darknessFactor;
+  g *= darknessFactor;
+  b *= darknessFactor;
+
+  return `rgb(${r.toFixed(0)}, ${g.toFixed(0)}, ${b.toFixed(0)})`;
+}

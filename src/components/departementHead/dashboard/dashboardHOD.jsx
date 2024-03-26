@@ -54,10 +54,9 @@ const DashboardHOD = () => {
             }
         })
         .then(res => {
-          console.log(res)
-            setDp(res.data.dp)
-            setEo(res.data.eo)
-            setAl(res.data.al)
+          setDp(res.data.dp)
+          setEo(res.data.eo)
+          setAl(res.data.al)
         })
     }
 
@@ -193,8 +192,8 @@ const DashboardHOD = () => {
               calendar.events.add({
                   start: format(parse(dp[i].replace_date, 'yyyy-MM-dd', new Date()), 'yyyy-MM-dd'),
                   end: format(parse(dp[i].replace_date, 'yyyy-MM-dd', new Date()), 'yyyy-MM-dd'),
-                  title: 'Day Payment : ' +  dp[i].Nama,
-                  people: [dp[i].Nama],
+                  title: 'Day Payment : ' +  dp[i].name,
+                  people: [dp[i].name],
                   description: 'MOD / Incharge  : ' + format(parse(dp[i].date, 'yyyy-MM-dd', new Date()), 'EEEE, dd MMM yyyy'),
                   id: '10' + dp[i].id,
                   calendarId: "leave"
@@ -209,8 +208,8 @@ const DashboardHOD = () => {
               calendar.events.add({
                   start: format(parse(eo[i].replace_date, 'yyyy-MM-dd', new Date()), 'yyyy-MM-dd'),
                   end: format(parse(eo[i].replace_date, 'yyyy-MM-dd', new Date()), 'yyyy-MM-dd'),
-                  title: 'Extra Off : ' +  eo[i].Nama,
-                  people: [eo[i].Nama],
+                  title: 'Extra Off : ' +  eo[i].name,
+                  people: [eo[i].name],
                   description: 'Entitlement  : ' + format(parse(eo[i].date, 'yyyy-MM-dd', new Date()), 'EEEE, dd MMM yyyy'),
                   id: '10' + eo[i].id,
                   calendarId: "leave"
@@ -224,8 +223,8 @@ const DashboardHOD = () => {
               calendar.events.add({
                   start: format(parse(al[i].replace_date, 'yyyy-MM-dd', new Date()), 'yyyy-MM-dd'),
                   end: format(parse(al[i].replace_date, 'yyyy-MM-dd', new Date()), 'yyyy-MM-dd'),
-                  title: 'Annual Leave : ' +  al[i].Nama,
-                  people: [al[i].Nama],
+                  title: 'Annual Leave : ' +  al[i].name,
+                  people: [al[i].name],
                   description: 'Entitlement  : ' + format(parse(al[i].date, 'yyyy-MM-dd', new Date()), 'EEEE, dd MMM yyyy'),
                   id: '10' + al[i].id,
                   calendarId: "leave"

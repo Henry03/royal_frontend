@@ -12,13 +12,9 @@ const LeaveDetail = ({fetchDataParent, id, ids}) => {
     const [dp, setDp] = useState([])
     const [eo, setEo] = useState([])
     const [al, setAl] = useState([])
-    const [destination, setDestination] = useState('')
-    const [purpose, setPurpose] = useState('')
-    const [start, setStart] = useState('')
-    const [end, setEnd] = useState('')
+    const [note, setNote] = useState('')
     const [track, setTrack] = useState('')
     const [status, setStatus] = useState('')
-    const [error, setError] = useState({})
 
     const fetchData = (e) => {
         e?.preventDefault()
@@ -29,7 +25,7 @@ const LeaveDetail = ({fetchDataParent, id, ids}) => {
             }
         })
         .then(res => {
-            console.log(res)
+            setNote(res.data.data.note) 
             setDp(res.data.dp)
             setEo(res.data.eo)
             setAl(res.data.al)
@@ -279,6 +275,12 @@ const LeaveDetail = ({fetchDataParent, id, ids}) => {
                                         <p className='text-center'>No available Annual Leave Quota</p>
                                     </div>
                                 }
+                            </div>
+                        </div>
+                        <div className="card card-compact bg-base-100 mt-3 border">
+                            <div className="card-body gap-0">
+                                <h2 className="card-title">Note</h2>
+                                <textarea readOnly className="textarea textarea-bordered" placeholder="Give some note here" value={note}></textarea>
                             </div>
                         </div>
                         

@@ -86,6 +86,7 @@ const LoginAdminPage = () => {
                 <div className="card mx-auto w-full max-w-xs sm:max-w-xl  shadow-xl">
                     <div className="bg-base-100 rounded-xl">
                         <div className='py-16 px-10'>
+
                             <h2 className='text-2xl font-semibold mb-2 text-center'>Admin Login</h2>
                             <form onSubmit={(e) => submitLogin(e)}>
 

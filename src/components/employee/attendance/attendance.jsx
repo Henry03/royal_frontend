@@ -73,7 +73,7 @@ const Attendance = () => {
             setPrevPage(res.data.data.current_page - 1)
         })
         .catch(err => {
-            window.location.href = '/login';
+            // window.location.href = '/login';
         })
     }
 
@@ -94,7 +94,7 @@ const Attendance = () => {
             <div className="m-5 p-5 md:px-10 bg-base-100 rounded-xl">
                 <div className='grid grid-flow-col items-center justify-between'>   
                     <h1 className="text-2xl font-semibold">Attendance Log</h1>
-                    <button className="btn btn-primary w-40" onClick={()=>document.getElementById('addDetail').showModal()}>Add Leave</button>
+                    
                 </div>
             </div>
             <div className="m-5 p-3 md:p-10 bg-base-100 rounded-xl">
