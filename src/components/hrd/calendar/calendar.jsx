@@ -201,15 +201,7 @@ const calendar = () => {
     
     useEffect(()=> {
         if(data.length > 0){
-            for(let i = 0; i < data.length; i++){
-                // console.log(data[i].title)
-                calendar.events.add({
-                    start: data[i].start,
-                    end: data[i].end,
-                    title: data[i].title,
-                    id: data[i].id
-                })
-            }
+            calendar.events.set(data)
         }
     }, [data])
     

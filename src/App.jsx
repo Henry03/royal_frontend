@@ -18,6 +18,7 @@ import LeaveStaffPage from "./pages/user/departementHead/leavePage";
 import OutOfDutyUserPage from "./pages/user/outofDutyPage";
 import LeaveUserPage from "./pages/user/leavePage";
 import TelegramPage from "./pages/api/telegram/telegram";
+import AnnualPage from "./pages/user/hrd/annual";
 
 
 
@@ -40,6 +41,7 @@ function App() {
         <Route path="/admin/calendar" element={<CalendarPage/>} />
         <Route path="/admin/attendance" element={<AttendanceHRDPage/>} />
         <Route path="/admin/api/telegram" element={<TelegramPage/>} />
+        <Route path="/admin/annual" element={<AnnualPage/>} />
 
         // Departement head
         <Route path="/admin/staff/permit/outofduty" element={<OutOfDutyStaffPage/>} />

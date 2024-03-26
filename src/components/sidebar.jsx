@@ -1,5 +1,5 @@
 import Logo from '../assets/logo.png';
-import { MdPeopleAlt, MdSpaceDashboard, MdChecklist, MdCalendarMonth, MdForkRight, MdOutlineWork, MdWorkOff } from 'react-icons/md'
+import { MdPeopleAlt, MdSpaceDashboard, MdChecklist, MdCalendarMonth, MdForkRight, MdOutlineWork, MdWorkOff, MdCalendarToday } from 'react-icons/md'
 import { FaBusinessTime, FaUserGear } from 'react-icons/fa6'
 import { TbApi } from "react-icons/tb";
 import { FaCoffee } from 'react-icons/fa'
@@ -32,6 +32,7 @@ const Sidebar = ({children}) => {
                                 <li><Link to="/admin/user"><FaUserGear size="20"/>User</Link></li>
                                 <li><Link to="/admin/attendance"><MdChecklist size="20"/>Attendance</Link></li>
                                 <li><Link to="/admin/calendar"><MdCalendarMonth size="20"/>Calendar</Link></li>
+                                <li><Link to="/admin/annual"><MdCalendarToday size="20"/>Annual Leave </Link></li>
                                 <li>
                                     <details>
                                         <summary>

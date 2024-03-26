@@ -75,10 +75,9 @@ const ApiTelegram = () => {
         <>
             <div className="m-5 p-5 md:px-10 bg-base-100 rounded-xl">
                 <div className='grid grid-flow-col items-center justify-between'>
-                    <h1 className="text-2xl font-semibold">Staff Data</h1>
+                    <h1 className="text-2xl font-semibold">Telegram API</h1>
                     <div className='grid grid-flow-row sm:grid-flow-col gap-2'>
-                        <button className="btn btn-primary btn-sm sm:btn-md w-40" onClick={()=>document.getElementById('importStaff').showModal()}>Import Staff</button>
-                        <button className="btn btn-primary btn-sm sm:btn-md w-40" onClick={()=>document.getElementById('addStaff').showModal()}>Add Staff</button>
+                    
                     </div>
                 </div>
             </div>
@@ -131,7 +130,6 @@ const ApiTelegram = () => {
                                 <th>Name</th>
                                 <th>Unit</th>
                                 <th>Position</th>
-                                <th>Phone Number</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -150,7 +148,6 @@ const ApiTelegram = () => {
                                             <td>{staff.Nama}</td>
                                             <td>{staff.Namaunit}</td>
                                             <td>{staff.JABATAN}</td>
-                                            <td>{staff.Notelp}</td>
                                             <td className='btn btn-ghost' onClick={()=>{document.getElementById('staffDetail').showModal();setId(staff.FID)}}><SlOptions/></td>
                                         </tr>
                                     )

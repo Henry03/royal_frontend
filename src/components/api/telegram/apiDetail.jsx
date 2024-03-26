@@ -2,21 +2,12 @@ import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import ConfirmModal from '../../confirmModal';
 import toast, { Toaster } from 'react-hot-toast'
+import ApiStatus from './_apiStatus';
 
 const ApiTelegramDetail = ({id, fetchDataParent}) => {
-    const [data, setData] = useState({})
-    const [dataUnit, setDataUnit] = useState([{}])
-    const [units, setUnits] = useState([])
-    const [positions, setPositions] = useState([])
-    const [idStaff, setIdStaff] = useState('')
-    const [name, setName] = useState('')
-    const [nik, setNik] = useState('')
-    const [unit, setUnit] = useState('')
-    const [position, setPosition] = useState('')
-    const [startDate, setStartDate] = useState('06/02/2013')
-    const [phoneNumber, setPhoneNumber] = useState('')
-    const [isEdit, setIsEdit] = useState(true) 
-    const [error, setError] = useState({})
+    const [staff, setStaff] = useState({})
+    const [session, setSession] = useState([])
+    const [idSession, setIdSession] = useState('')
 
     const fetchData = (e) => {
         e?.preventDefault()
@@ -24,83 +15,85 @@ const ApiTelegramDetail = ({id, fetchDataParent}) => {
             id: id
         }
 
-        axios.get('/unit',
-        {
-            headers: {
-                Authorization: 'Bearer ' + localStorage.getItem('admin-token')
-            }
-        })
-        .then(res => {
-            setDataUnit(res.data.data)
-            
-        })
-
-        axios.post('/staff/detail', input,
+        axios.post('/telegram/session', input,
         {
             headers: {
                 Authorization: 'Bearer ' + localStorage.getItem('admin-token')
             }
         })  
         .then(res => {
-            setData(res.data.data)
+            setStaff(res.data.staff)
+            setSession(res.data.data)
         })
     }
 
-    const updateData = (e) => {
+    const activateSession = (e) => {
         e?.preventDefault()
         const input = {
-            FID: id,
-            Nama: name,
-            NIK: nik,
-            DEPT_NAME: unit,
-            JABATAN: position,
-            TGL_MASUK: startDate,
-            Notelp: phoneNumber
+            id: idSession,
         }   
 
         toast.promise
         (
-            axios.post('/staff/update', input,
+            axios.post('/telegram/session/activate', input,
             {
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('admin-token')
                 }
             }),
             {
-                loading: 'Updating...',
+                loading: 'Activating...',
                 success: (res) => {
-                    console.log(res)
-                    setIsEdit(!isEdit)
-                    fetchDataParent()
+                    fetchData()
                     return res.data.message
                 },
                 error: (err) => {
-                    console.log(err)
-                    setError(err.response.data.errors)
                     return err.response.data.message
                 }
             }
         )
     }
 
-    const deleteData = (e) => {
+    const revokeSession = (e) => {
         e?.preventDefault()
         const input = {
-            id: id
+            id: idSession
         }
 
         toast.promise (
-            axios.post('/staff/delete', input,
+            axios.post('/telegram/session/revoke', input,
             {
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('admin-token')
                 }
             }),
             {
-                loading: 'Deleting...',
+                loading: 'Revoking...',
                 success: (res) => {
-                    fetchDataParent()
-                    document.getElementById('staffDetail').close()
+                    fetchData()
+                    return res.data.message
+                }
+            }
+        )
+    }
+
+    const banSession = (e) => {
+        e?.preventDefault()
+        const input = {
+            id: idSession
+        }
+
+        toast.promise (
+            axios.post('/telegram/session/ban', input,
+            {
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('admin-token')
+                }
+            }),
+            {
+                loading: 'Banning...',
+                success: (res) => {
+                    fetchData()
                     document.getElementById('confirmModal').close()
                     return res.data.message
                 }
@@ -108,77 +101,11 @@ const ApiTelegramDetail = ({id, fetchDataParent}) => {
         )
     }
 
-
-    const formatDate = (dateString) => {
-        if(dateString && dateString.includes('/')){
-            const [day, month, year] = dateString.split('/'); // Split date string into day, month, and year
-            return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`; // Format the date
-        }
-    };
-
-    const handleMouseDown = (e) => {
-        if(isEdit){
-            e.preventDefault(); // Prevent mouse click
-        }
-    };
-
-    const handleKeyDown = (e) => {
-        if(isEdit){
-            e.preventDefault(); // Prevent keyboard input
-        }
-    };
-
-    const cancel = (e) => {
-        e.preventDefault()
-
-        setIdStaff(data.FID)
-        setName(data.Nama)
-        setNik(data.NIK)
-        setUnit(data.DEPT_NAME)
-        setPosition(data.JABATAN)
-        setStartDate(data.TGL_MASUK)
-        setPhoneNumber(data.Notelp)
-        setIsEdit(!isEdit)
-    }
-
-    const unitsWithId = Array.from(new Set(dataUnit.map(item => item.unit)))
-    .map(unit => {
-        const item = dataUnit.find(item => item.unit === unit);
-        return { unit, idUnit: item.idUnit };
-    });
-
-    useEffect(() => {
-        setError({})
-    },[isEdit])
-
     useEffect(() => {
         if(id){
             fetchData()
         }
     },[id])
-
-    useEffect(() => {
-        if(data){
-            setIdStaff(data.FID)
-            setName(data.Nama)
-            setNik(data.NIK)
-            setUnit(data.DEPT_NAME)
-            setPosition(data.JABATAN)
-            setStartDate(data.TGL_MASUK)
-            setPhoneNumber(data.Notelp)
-        }
-    },[data])
-
-    useEffect(() => {
-        if(dataUnit){
-            setUnits(unitsWithId)
-        }
-    },[dataUnit])
-
-    useEffect(() => {
-        const positionsTemp = dataUnit.filter(item => item.idUnit === unit).map(item => item.jabatan);
-        setPositions(positionsTemp);
-    },[unit, dataUnit])
 
     return (
         <>  
@@ -187,122 +114,79 @@ const ApiTelegramDetail = ({id, fetchDataParent}) => {
                     <form method="dialog">
                     <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                     </form>
-                    <h3 className="font-bold text-lg">Staff Detail </h3>
-                    <label className="form-control w-full">
-                        <div className="label">
-                            <span className="label-text">ID</span>
-                        </div>
-                        <input readOnly={isEdit} type="text" placeholder="Staff ID" className="input input-bordered w-full" value={idStaff} onChange={(e)=>setIdStaff(e.target.value)}/>
-                        {
-                            error.FID &&
-                            <label className="label-text-alt mt-1 text-red-500">{error.FID}</label>
-                        }
-                    </label>
+                    <h3 className="font-bold text-lg">User Session </h3>
                     <label className="form-control w-full">
                         <div className="label">
                             <span className="label-text">Name</span>
                         </div>
-                        <input readOnly={isEdit} type="text" placeholder="Staff Name" className="input input-bordered w-full" value={name} onChange={(e)=>setName(e.target.value)}/>
-                        {
-                            error.Nama &&
-                            <label className="label-text-alt mt-1 text-red-500">{error.Nama}</label>
-                        }
+                        <input readOnly type="text" placeholder="Staff Name" className="input input-bordered w-full" value={staff.name} onChange={(e)=>setName(e.target.value)}/>
                     </label>
                     <label className="form-control w-full">
                         <div className="label">
-                            <span className="label-text">NIK</span>
+                            <span className="label-text">Department</span>
                         </div>
-                        <input readOnly={isEdit} type="text" placeholder="Staff NIK" className="input input-bordered w-full" value={nik} onChange={(e)=>setNik(e.target.value)}/>
-                        {
-                            error.NIK &&
-                            <label className="label-text-alt mt-1 text-red-500">{error.NIK}</label>
-                        }
+                        <input readOnly type="text" placeholder="Staff Name" className="input input-bordered w-full" value={staff.Namaunit} onChange={(e)=>setName(e.target.value)}/>
                     </label>
                     <label className="form-control w-full">
                         <div className="label">
-                            <span className="label-text">Unit</span>
+                            <span className="label-text">Position</span>
                         </div>
-                        <select className="select select-bordered" value={unit} onChange={(e)=>setUnit(e.target.value)} onMouseDown={(e)=>handleMouseDown(e)} onKeyDown={(e)=>handleKeyDown(e)}>
+                        <input readOnly type="text" placeholder="Staff Name" className="input input-bordered w-full" value={staff.position} onChange={(e)=>setName(e.target.value)}/>
+                    </label>
+                    <div className="card card-compact bg-base-100 mt-3 border">
+                        <div className="card-body gap-0">
+                            <h2 className="card-title">Session</h2>
                             {
-                                units.map((item, index) => {
-                                    return(
-                                        <option key={index} value={item.idUnit}>{item.unit}</option>
-                                    )
-                                })
+                                session && session.length > 0 ?
+                                <>
+                                    {session.map((value, index) => (  
+                                        <div key={index} className="card mt-3 bg-base-100 border">
+                                            <div className="card-body gap-1">
+                                                <div className="grid grid-flow-col justify-between">
+                                                    <p className='text-md font-semibold'>{value.id}</p>
+                                                    <ApiStatus status={value.status}/>
+                                                </div>
+                                                <div className='grid grid-flow-co grid-cols-3 mt-2'>
+                                                    <p className='text-md'>First Name</p>
+                                                    <p className='text-md'>: {value.first_name}</p>
+                                                </div>
+                                                <div className='grid grid-flow-col grid-cols-3'>
+                                                    <p className='text-md'>Username</p>
+                                                    <p className='text-md'>: {value.username}</p>
+                                                </div>
+                                                <div className='grid grid-flow-col grid-cols-3'>
+                                                    <p className='text-md'>Phone Number</p>
+                                                    <p className='text-md'>: {value.phone_number}</p>
+                                                </div>
+                                                {
+                                                    value.status == "Active" ?
+                                                    <div className='grid grid-flow-col grid-cols-2 gap-5 mt-3'>
+                                                        <button className='btn btn-warning btn-sm w-full' onClick={(e)=>{revokeSession(e),setIdSession(value.id)}}>Revoke</button>
+                                                        <button className='btn btn-error btn-sm w-full' onClick={()=>document.getElementById('confirmModal').showModal()}>Ban</button>
+                                                    </div>
+                                                    : value.status == "Banned" || value.status == "Inactive" ?
+                                                    <div className='grid grid-flow-col gap-5 mt-3'>
+                                                        <button className='btn btn-success btn-sm w-full' onClick={(e)=>{activateSession(e),setIdSession(value.id)}}>Activate</button>
+                                                    </div>
+                                                    : ''
+                                                }
+                                            </div>
+                                        </div>
+                                    ))}
+                                </>
+                                : 
+                                <div className='flex justify-center mt-3'>
+                                    <p className='text-center'>No session available</p>
+                                </div>
                             }
-                        </select>   
-                        {
-                            error.DEPT_NAME &&
-                            <label className="label-text-alt mt-1 text-red-500">{error.DEPT_NAME}</label>
-                        }
-                    </label>
-                    {
-                        unit &&
-                        <label className="form-control w-full">
-                            <div className="label">
-                                <span className="label-text">Position</span>
-                            </div>
-                            <select className="select select-bordered" value={position} onChange={(e)=>setPosition(e.target.value)} onMouseDown={(e)=>handleMouseDown(e)} onKeyDown={(e)=>handleKeyDown(e)}>
-                                {
-                                    positions.map((item, index) => {
-                                        return(
-                                            <option key={index}>{item}</option>
-                                        )
-                                    })
-                                }
-                            </select>   
-                            {
-                                error.JABATAN &&
-                                <label className="label-text-alt mt-1 text-red-500">{error.JABATAN}</label>
-                            }
-                        </label>
-                    }
-                    <label className="form-control w-full">
-                        <div className="label">
-                            <span className="label-text">Start Date</span>
                         </div>
-                        <input readOnly={isEdit} type="date" placeholder="Start Date" className="input input-bordered w-full" value={formatDate(startDate)} onChange={(e)=>setStartDate(e.target.value)}/>
-                        {
-                            error.TGL_MASUK &&
-                            <label className="label-text-alt mt-1 text-red-500">{error.TGL_MASUK}</label>
-                        }
-                    </label>
-                    <label className="form-control w-full">
-                        <div className="label">
-                            <span className="label-text">Phone Number</span>
-                        </div>
-                        <input readOnly={isEdit} type="text" placeholder="Phone Number Not Available" className="input input-bordered w-full" value={phoneNumber} onChange={(e)=>setPhoneNumber(e.target.value)}/>
-                        {
-                            error.Notelp &&
-                            <label className="label-text-alt mt-1 text-red-500">{error.Notelp}</label>
-                        }
-                    </label>
-                    {
-                        isEdit &&
-                        <div className='grid grid-flow-col gap-5 mt-5'>
-                            <button className='btn btn-warning w-full' onClick={()=>setIsEdit(!isEdit)}>Edit</button>
-                            <button className='btn btn-error w-full' onClick={()=>document.getElementById('confirmModal').showModal()}>Delete</button>
-                        </div>
-                    }
-                    {
-                        !isEdit &&
-                        <div className='grid grid-flow-col gap-5 mt-5'>
-                            <button className='btn w-full' onClick={(e)=>cancel(e)}>Cancel</button>
-                            <button className='btn btn-success w-full' onClick={(e)=>updateData(e)}>Save</button>
-                        </div>
-                    }
+                    </div>
                 </div>
                 <Toaster 
                 position="top-right"
-                toastOptions={{
-                    duration:2000
-                }}
             />
             </dialog>
-            <Toaster 
-                position="top-right"
-            />
-            <ConfirmModal title={"Delete Staff"} desc={"Are you sure want to delete this staff data?"} btn={"Delete"} btnAction={deleteData} btnType={"btn-error"}/>
+            <ConfirmModal title={"Ban Session"} desc={"Are you sure want to ban this session?"} btn={"Ban Anyway"} btnAction={banSession} btnType={"btn-error"}/>
             
         </>
     );

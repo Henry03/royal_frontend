@@ -4,6 +4,7 @@ import Sidebar from '../../components/sidebar';
 import AuthCheckAdmin from '../../components/auth/AuthCheckAdmin';
 import DashboardHOD from '../../components/departementHead/dashboard/dashboardHOD';
 import Dashboard from '../../components/hrd/dashboard/dashboard';
+import DashboardGM from '../../components/generalManager/dashboardGM';
 
 
 const DashboardPage = () => {
@@ -15,6 +16,8 @@ const DashboardPage = () => {
             <Sidebar children={
                 role == 6 ?
                 <Dashboard/> 
+                : role == 5 ?
+                <DashboardGM/>
                 :<DashboardHOD/>
             }/>
         </div>

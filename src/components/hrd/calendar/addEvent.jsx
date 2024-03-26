@@ -61,7 +61,7 @@ const AddEvent = ({fetchDataParent, fetchDataByDateParent}) => {
                         </div>
                         <input type="text" placeholder="Title" className="input input-bordered w-full" value={title} onChange={(e)=>setTitle(e.target.value)}/>
                         {
-                            error.Nama_libur &&
+                            error && error.Nama_libur &&
                             <label className="label-text-alt mt-1 text-red-500">{error.Nama_libur}</label>
                         }
                     </label>
@@ -71,7 +71,7 @@ const AddEvent = ({fetchDataParent, fetchDataByDateParent}) => {
                         </div>
                         <input type="date" placeholder="Date" className="input input-bordered w-full" value={date} onChange={(e)=>setDate(e.target.value)}/>
                         {
-                            error.tgl_libur &&
+                            error && error.tgl_libur &&
                             <label className="label-text-alt mt-1 text-red-500">{error.tgl_libur}</label>
                         }
                     </label>
